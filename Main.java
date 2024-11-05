@@ -59,6 +59,7 @@ public class Main {
                 System.out.println("Player 1's score: " + score1);
                 break;
             }
+            in.close();
         }
     }
 }
