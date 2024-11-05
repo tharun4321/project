@@ -4,16 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dice Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .player-container {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 200px;
+        }
+        .score {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+        }
+        .disabled {
+            background-color: #ddd;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Dice Game</h1>
-    <div id="game-info">
-        <p>Player 1 Score: <span id="player1-score">0</span></p>
-        <p>Player 2 Score: <span id="player2-score">0</span></p>
-    </div>
-    <button onclick="startGame()">Start Game</button>
     <div id="result"></div>
-    <script src="script.js"></script>
+
+    <div class="player-container" id="player1-container">
+        <h2>Player 1</h2>
+        <p>Score: <span id="score1">0</span></p>
+        <button id="player1-btn" onclick="rollDice(1)">Roll Dice</button>
+        <div id="player1-message"></div>
+    </div>
+
+    <div class="player-container" id="player2-container">
+        <h2>Player 2</h2>
+        <p>Score: <span id="score2">0</span></p>
+        <button id="player2-btn" onclick="rollDice(2)" class="disabled" disabled>Roll Dice</button>
+        <div id="player2-message"></div>
+    </div>
+
+    <script>
+        const target = 100;
+        let score1 = 0;
+        let score2 = 0;
+        let rollCount1 = 0;
+        let rollCount2 = 0;
+        let currentPlayer = 1; // 1 for Player 1, 2 for Player 2
+
+        function rollDice(player) {
+            if (player !== currentPlayer) return; // Prevent roll if it's not the player's turn
+
+            let roll = Math.floor(Math.random() * 6) + 1;
+            let message = `Player ${player} rolls: ${roll}`;
+
+            if (player === 1) {
+                if (roll === 6) {
+                    rollCount1++;
+                    if (rollCount1 === 3) {
+                        message += "<br>Player 1 rolled three 6s in a row, extra rolls not counted!";
+                        rollCount1 = 0;
+                        document.getElementById("player1-message").innerHTML = message;
+                        switchTurn();
+                        return;
+                    }
+                } else {
+                    rollCount1 = 0;
+                }
+                score1 += roll;
+                document.getElementById("score1").innerText = score1;
+                document.getElementById("player1-message").innerHTML = message;
+                if (score1 >= target) {
+                    document.getElementById("result").innerHTML = `<h2>Player 1 wins with a score of ${score1}</h2>`;
+                    disableButtons();
+                    return;
+                }
+            } else {
+                if (roll === 6) {
+                    rollCount2++;
+                    if (rollCount2 === 3) {
+                        message += "<br>Player 2 rolled three 6s in a row, extra rolls not counted!";
+                        rollCount2 = 0;
+                        document.getElementById("player2-message").innerHTML = message;
+                        switchTurn();
+                        return;
+                    }
+                } else {
+                    rollCount2 = 0;
+                }
+                score2 += roll;
+                document.getElementById("score2").innerText = score2;
+                document.getElementById("player2-message").innerHTML = message;
+                if (score2 >= target) {
+                    document.getElementById("result").innerHTML = `<h2>Player 2 wins with a score of ${score2}</h2>`;
+                    disableButtons();
+                    return;
+                }
+            }
+
+            // Switch turn to the other player
+            if (roll !== 6) {
+                switchTurn();
+            }
+        }
+
+        function switchTurn() {
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+                document.getElementById("player1-btn").disabled = true;
+                document.getElementById("player1-btn").classList.add("disabled");
+                document.getElementById("player2-btn").disabled = false;
+                document.getElementById("player2-btn").classList.remove("disabled");
+            } else {
+                currentPlayer = 1;
+                document.getElementById("player2-btn").disabled = true;
+                document.getElementById("player2-btn").classList.add("disabled");
+                document.getElementById("player1-btn").disabled = false;
+                document.getElementById("player1-btn").classList.remove("disabled");
+            }
+        }
+
+        function disableButtons() {
+            document.getElementById("player1-btn").disabled = true;
+            document.getElementById("player2-btn").disabled = true;
+        }
+    </script>
+
 </body>
 </html>
