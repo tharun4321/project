@@ -1,7 +1,7 @@
 function startGame() {
     let score1 = 0;
     let score2 = 0;
-    const target = 100;
+    const target = 50;
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = "";
 

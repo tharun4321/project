@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        int target = 100; // Target score to win
+        int target = 50; // Target score to win
         int score1 = 0; // Score for Player 1
         int score2 = 0; // Score for Player 2
         Random random = new Random();
